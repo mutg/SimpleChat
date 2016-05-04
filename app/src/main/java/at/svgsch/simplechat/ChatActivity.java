@@ -167,7 +167,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void handleConnected(String data) throws Exception {
         JSONObject obj = new JSONObject(data);
-        displayInfoMessage("Koblet til!");
         myId = obj.getString("id");
         userDb = new UserDatabase(generateUserList(obj.getJSONArray("online_users")));
     }
