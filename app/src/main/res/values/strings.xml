@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SimpleChat</string>
+    <string name="hint_login">Oppgi brukernamn</string>
+    <string name="login">Koble til</string>
+    <string name="send">Send</string>
+    <string name="hint_send">Skriv melding</string>
+</resources>
