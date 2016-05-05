@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,13 +23,13 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.ref.WeakReference;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -40,12 +42,14 @@ public class ChatActivity extends AppCompatActivity {
     private Client client;
     private RetainedFragment retainedFragment;
 
+
     private String username;
     private String myId;
 
     private LinearLayout ll_chat;
     private EditText et_message;
     private ScrollView sv_chat;
+    private Toolbar toolbar;
     private Button btn_send;
 
     private int myColor = Color.parseColor("#DBFFBA");
@@ -112,6 +116,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initViews() {
+
+
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.app_name) + " - " + username);
         btn_send = (Button) findViewById(R.id.btn_send);
         btn_send.setEnabled(false);
         et_message = (EditText)findViewById(R.id.et_sent);
@@ -133,6 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         });
         sv_chat = (ScrollView)findViewById(R.id.sv_chat);
         ll_chat = (LinearLayout)findViewById(R.id.ll_chat);
+        setSupportActionBar(toolbar);
     }
 
     private void connect() {
@@ -199,6 +208,7 @@ public class ChatActivity extends AppCompatActivity {
         infoTv.setTypeface(null, Typeface.ITALIC);
         infoTv.setTextColor(Color.LTGRAY);
         ll_chat.addView(infoTv);
+        infoTv.setGravity(Gravity.CENTER);
         scrollToBottom();
     }
 
@@ -207,7 +217,7 @@ public class ChatActivity extends AppCompatActivity {
         SimpleDateFormat date = new SimpleDateFormat("HH:mm");
         String info = date.format(Calendar.getInstance().getTime());
         chatMessages.add(new ChatMessage(this, ll_chat, username, message, color, info, isRight));
-
+        writeToLog("["+info+"] " + username + ": " + message);
         scrollToBottom();
     }
 
@@ -266,6 +276,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    private void writeToLog(String text) {
+        File file = new File(this.getFilesDir(), LogActivity.LOG_FILE);
+
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+            bw.write(text);
+            bw.newLine();
+            bw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onDestroy() {

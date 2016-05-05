@@ -24,7 +24,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, ChatActivity.class);
         i.putExtra(EXTRA_USERNAME,username);
         startActivity(i);
-        finish();
     }
 
+    public void onViewLogPressed(View v) {
+        Intent i = new Intent(this, LogActivity.class);
+        startActivity(i);
+    }
 }
